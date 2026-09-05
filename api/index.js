@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { Pool } = require("pg");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración de PostgreSQL
+// Conexión con PostgreSQL
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -17,18 +18,23 @@ const pool = new Pool({
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
+
+// Servir archivos del frontend
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Probar conexión con PostgreSQL
 app.get("/api/test", async (req, res) => {
     try {
         const result = await pool.query("SELECT NOW()");
+
         res.json({
             mensaje: "Conexión con PostgreSQL correcta",
             fecha: result.rows[0].now
         });
+
     } catch (error) {
         console.error(error);
+
         res.status(500).json({
             error: "No se pudo conectar con PostgreSQL"
         });
@@ -43,8 +49,10 @@ app.get("/api/mesas", async (req, res) => {
         );
 
         res.json(result.rows);
+
     } catch (error) {
         console.error(error);
+
         res.status(500).json({
             error: "Error al obtener las mesas"
         });
@@ -53,6 +61,7 @@ app.get("/api/mesas", async (req, res) => {
 
 // Cambiar estado de una mesa
 app.put("/api/mesas/:id", async (req, res) => {
+
     const { id } = req.params;
     const { estado } = req.body;
 
@@ -63,6 +72,7 @@ app.put("/api/mesas/:id", async (req, res) => {
     }
 
     try {
+
         const result = await pool.query(
             "UPDATE mesas SET estado = $1 WHERE id = $2 RETURNING *",
             [estado, id]
@@ -75,15 +85,27 @@ app.put("/api/mesas/:id", async (req, res) => {
         }
 
         res.json(result.rows[0]);
+
     } catch (error) {
+
         console.error(error);
+
         res.status(500).json({
             error: "Error al actualizar la mesa"
         });
     }
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
-});
+// Exportar aplicación para Vercel
+module.exports = app;
+
+// Ejecutar servidor solamente cuando trabajamos localmente
+if (require.main === module) {
+
+    app.listen(PORT, () => {
+        console.log(
+            `Servidor ejecutándose en http://localhost:${PORT}`
+        );
+    });
+
+}
