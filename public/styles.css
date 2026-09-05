@@ -1,0 +1,107 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+header {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+}
+
+main {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.resumen {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.contador {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.contador span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.contador strong {
+    font-size: 30px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.mesas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+.mesa {
+    padding: 25px 15px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.mesa.vacia {
+    background: #28a745;
+}
+
+.mesa.ocupada {
+    background: #dc3545;
+}
+
+.mesa h3 {
+    margin-bottom: 10px;
+}
+
+.mesa button {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.mensaje {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .resumen {
+        flex-direction: column;
+    }
+
+    .mesas-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

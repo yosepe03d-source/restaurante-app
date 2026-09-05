@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🍽️ Restaurante App</h1>
+        <p>Gestión de mesas</p>
+    </header>
+
+    <main>
+
+        <section class="resumen">
+            <div class="contador">
+                <span>Mesas vacías</span>
+                <strong id="mesasVacias">0</strong>
+            </div>
+
+            <div class="contador">
+                <span>Mesas ocupadas</span>
+                <strong id="mesasOcupadas">0</strong>
+            </div>
+        </section>
+
+        <section>
+            <h2>Mesas del restaurante</h2>
+
+            <div id="mesas" class="mesas-container">
+                Cargando mesas...
+            </div>
+        </section>
+
+        <div id="mensaje" class="mensaje"></div>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>

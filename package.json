@@ -1,0 +1,14 @@
+{
+  "name": "restaurante-app",
+  "version": "1.0.0",
+  "description": "Aplicación web para gestión de restaurante",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
