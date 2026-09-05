@@ -1,46 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Restaurante App</title>
+
     <link rel="stylesheet" href="styles.css">
+
 </head>
 
 <body>
 
-    <header>
-        <h1>🍽️ Restaurante App</h1>
-        <p>Gestión de mesas</p>
+    <header class="header">
+
+        <div>
+            <h1>🍔 Restaurante App</h1>
+            <p>Control de mesas</p>
+        </div>
+
+        <div class="connection">
+            <span id="connectionStatus">
+                Verificando conexión...
+            </span>
+        </div>
+
     </header>
 
-    <main>
 
-        <section class="resumen">
-            <div class="contador">
-                <span>Mesas vacías</span>
-                <strong id="mesasVacias">0</strong>
+    <main class="container">
+
+        <section class="summary">
+
+            <div class="summary-card">
+                <span>🟢</span>
+                <div>
+                    <h3 id="mesasVacias">0</h3>
+                    <p>Mesas vacías</p>
+                </div>
             </div>
 
-            <div class="contador">
-                <span>Mesas ocupadas</span>
-                <strong id="mesasOcupadas">0</strong>
+            <div class="summary-card">
+                <span>🔴</span>
+                <div>
+                    <h3 id="mesasOcupadas">0</h3>
+                    <p>Mesas ocupadas</p>
+                </div>
             </div>
+
         </section>
+
 
         <section>
-            <h2>Mesas del restaurante</h2>
 
-            <div id="mesas" class="mesas-container">
-                Cargando mesas...
+            <h2>Estado de las mesas</h2>
+
+            <div id="mesasContainer" class="mesas-grid">
+
+                <p>Cargando mesas...</p>
+
             </div>
+
         </section>
 
-        <div id="mensaje" class="mensaje"></div>
-
     </main>
+
+
+    <div id="notification" class="notification"></div>
+
 
     <script src="app.js"></script>
 
 </body>
+
 </html>

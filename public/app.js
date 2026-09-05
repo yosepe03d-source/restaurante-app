@@ -1,25 +1,56 @@
-const mesasContainer = document.getElementById("mesas");
+const mesasContainer = document.getElementById("mesasContainer");
+
 const mesasVacias = document.getElementById("mesasVacias");
+
 const mesasOcupadas = document.getElementById("mesasOcupadas");
-const mensaje = document.getElementById("mensaje");
+
+const connectionStatus =
+    document.getElementById("connectionStatus");
+
+const notification =
+    document.getElementById("notification");
+
+
+// =====================================
+// CARGAR MESAS
+// =====================================
 
 async function cargarMesas() {
-    try {
-        const respuesta = await fetch("/api/mesas");
 
-        if (!respuesta.ok) {
-            throw new Error("No se pudieron cargar las mesas");
+    try {
+
+        const response = await fetch("/api/mesas");
+
+        if (!response.ok) {
+            throw new Error("Error en la API");
         }
 
-        const mesas = await respuesta.json();
+        const mesas = await response.json();
+
+        connectionStatus.textContent = "🟢 PostgreSQL conectado";
 
         mostrarMesas(mesas);
 
     } catch (error) {
+
         console.error(error);
-        mesasContainer.innerHTML = "Error al cargar las mesas.";
+
+        connectionStatus.textContent =
+            "🔴 Error de conexión";
+
+        mesasContainer.innerHTML = `
+            <p>
+                No se pudieron cargar las mesas.
+                Verifica que PostgreSQL y el servidor estén funcionando.
+            </p>
+        `;
     }
 }
+
+
+// =====================================
+// MOSTRAR MESAS
+// =====================================
 
 function mostrarMesas(mesas) {
 
@@ -40,53 +71,92 @@ function mostrarMesas(mesas) {
 
         div.className = `mesa ${mesa.estado}`;
 
+        const estadoTexto =
+            mesa.estado === "vacia"
+                ? "🟢 VACÍA"
+                : "🔴 OCUPADA";
+
+        const botonTexto =
+            mesa.estado === "vacia"
+                ? "Ocupar mesa"
+                : "Liberar mesa";
+
+        const nuevoEstado =
+            mesa.estado === "vacia"
+                ? "ocupada"
+                : "vacia";
+
+        const claseBoton =
+            mesa.estado === "vacia"
+                ? "btn-ocupar"
+                : "btn-liberar";
+
         div.innerHTML = `
             <h3>Mesa ${mesa.numero}</h3>
-            <p>Estado: <strong>${mesa.estado}</strong></p>
 
-            <button onclick="cambiarEstado(${mesa.id}, '${mesa.estado}')">
-                ${mesa.estado === "vacia" ? "Ocupar mesa" : "Liberar mesa"}
+            <div class="estado">
+                ${estadoTexto}
+            </div>
+
+            <button
+                class="btn ${claseBoton}"
+                onclick="cambiarEstado(${mesa.id}, '${nuevoEstado}')">
+
+                ${botonTexto}
+
             </button>
         `;
 
         mesasContainer.appendChild(div);
+
     });
 
     mesasVacias.textContent = vacias;
+
     mesasOcupadas.textContent = ocupadas;
 }
 
-async function cambiarEstado(id, estadoActual) {
 
-    const nuevoEstado =
-        estadoActual === "vacia" ? "ocupada" : "vacia";
+// =====================================
+// CAMBIAR ESTADO
+// =====================================
 
-    const confirmar = confirm(
-        `¿Quieres ${nuevoEstado === "ocupada" ? "ocupar" : "liberar"} esta mesa?`
+async function cambiarEstado(id, estado) {
+
+    const confirmacion = confirm(
+        estado === "ocupada"
+            ? "¿Deseas marcar esta mesa como ocupada?"
+            : "¿Deseas liberar esta mesa?"
     );
 
-    if (!confirmar) {
+    if (!confirmacion) {
         return;
     }
 
     try {
 
-        const respuesta = await fetch(`/api/mesas/${id}`, {
+        const response = await fetch(`/api/mesas/${id}`, {
+
             method: "PUT",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
-                estado: nuevoEstado
+                estado: estado
             })
+
         });
 
-        if (!respuesta.ok) {
-            throw new Error("No se pudo actualizar la mesa");
+        if (!response.ok) {
+            throw new Error("No se pudo actualizar");
         }
 
-        mostrarMensaje(
-            `Mesa actualizada correctamente: ${nuevoEstado}`
+        const mesa = await response.json();
+
+        mostrarNotificacion(
+            `Mesa ${mesa.numero} actualizada correctamente`
         );
 
         cargarMesas();
@@ -95,19 +165,33 @@ async function cambiarEstado(id, estadoActual) {
 
         console.error(error);
 
-        mostrarMensaje(
-            "Ocurrió un error al actualizar la mesa."
+        mostrarNotificacion(
+            "❌ No se pudo actualizar la mesa"
         );
     }
 }
 
-function mostrarMensaje(texto) {
 
-    mensaje.textContent = texto;
+// =====================================
+// NOTIFICACIÓN
+// =====================================
+
+function mostrarNotificacion(mensaje) {
+
+    notification.textContent = mensaje;
+
+    notification.classList.add("show");
 
     setTimeout(() => {
-        mensaje.textContent = "";
+
+        notification.classList.remove("show");
+
     }, 3000);
 }
+
+
+// =====================================
+// INICIAR
+// =====================================
 
 cargarMesas();
