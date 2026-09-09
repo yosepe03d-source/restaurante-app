@@ -15,6 +15,13 @@ const pool = new Pool({
     }
 });
 
+const pool = new Pool({
+    connectionString: process.env.LOCAL_DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
